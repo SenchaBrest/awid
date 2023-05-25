@@ -2,7 +2,8 @@
 /all.txt
 /all_new.txt
 /q.py
-/runs
+/saves
 /w.py
 /window.py
 /yolov8n.pt
+/__pycache__
