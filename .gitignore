@@ -1,9 +1,4 @@
-/1.txt
-/all.txt
-/all_new.txt
-/q.py
-/saves
-/w.py
-/window.py
-/yolov8n.pt
 /__pycache__
+/saves
+/*.pt
+/*.db

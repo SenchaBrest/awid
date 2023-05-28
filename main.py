@@ -178,7 +178,7 @@ class App:
                 self.clear_console(5)
 
                 labels = get_labels()
-                data = get_data(*calculate_stat(date_from, date_until, self.menu.chosen_menu_entry.split('/')[-1]))
+                data = get_data(date_from, date_until, self.menu.chosen_menu_entry.split('/')[-1])
                 plot(labels, data, tg.normalize(np.log1p(data), 25))
                 
                 input("Press Enter to continue...")
@@ -190,7 +190,7 @@ class App:
             print("No urls to get statistic.")
             input("Press Enter to continue...")
             self.clear_console(2)
-            self.url_actions()
+            self.main()
 
 
     def get_datetime_from_input(self):
@@ -205,7 +205,31 @@ class App:
 
 
     def get_videos(self):
-        pass
+        if len(self.urls) != 0:
+            self.options = [*self.urls, "Back"]
+            self.update_menu()
+            if self.menu.chosen_menu_entry != "Back":
+                print("The time from which you want to display statistics:")
+                date_from = self.get_datetime_from_input()
+                print("The time until which you want to display statistics:")
+                date_until = self.get_datetime_from_input()
+                input("Press Enter to continue...")
+                self.clear_console(5)
+
+                labels = get_labels()
+                data = get_data(*calculate_stat(date_from, date_until, self.menu.chosen_menu_entry.split('/')[-1]))
+                plot(labels, data, tg.normalize(np.log1p(data), 25))
+                
+                input("Press Enter to continue...")
+                self.clear_console(16)
+                self.get_stat()
+            else:
+                self.main()
+        else:
+            print("No urls to get statistic.")
+            input("Press Enter to continue...")
+            self.clear_console(2)
+            self.main()   
 
 
     def exit(self):

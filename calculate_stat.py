@@ -3,15 +3,7 @@ from db import Database
 
 def calculate_stat(start, end, url):
     db = Database()
-
-    records = db.get_records(url.split('/')[-1], start, end)
-
-    class_durations = {"0": [], "1": [], "2": [], "3": [], "5": [], "7": []}
-
-    for cls, time in records:
-        if cls in class_durations:
-            class_durations[cls].append(float(time))
-
+    class_durations = db.get_records(url.split('/')[-1], start, end)
     db.close()
 
     person = class_durations["0"]
@@ -28,7 +20,11 @@ def get_labels():
     return [*[f'{2 ** (i - 1) if i > 0 else 0} < t < {2 ** i}' for i in range(10 + 1)], f't > {2 ** 10}']
 
 
-def get_data(person, bicycle, car, motorcycle, bus, truck):    
+def get_data(start, end, url): 
+    db = Database()
+    clss = db.get_records(url.split('/')[-1], start, end)
+    db.close()
+   
     def sep(numbers):
         result = []
         ranges = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
@@ -39,7 +35,7 @@ def get_data(person, bicycle, car, motorcycle, bus, truck):
         return result
     
     data = []
-    for p, b, c, m, B, t in zip(sep(person), sep(bicycle), sep(car), sep(motorcycle), sep(bus), sep(truck)):
+    for p, b, c, m, B, t in zip(sep(clss[0]), sep(clss[1]), sep(clss[2]), sep(clss[3]), sep(clss[5]), sep(clss[7])):
         data.append([p, b, c, m, B, t])
 
     return data
