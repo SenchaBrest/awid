@@ -1,12 +1,14 @@
-import click
 from art import tprint
 from simple_term_menu import TerminalMenu
 import sys
 from yolo import Yolo
 from datetime import datetime
-from calculate_stat import calculate_stat, get_labels, get_data, plot
+from calculate_stat import get_labels, get_data, plot
 import numpy as np
 from termgraph import termgraph as tg
+import os
+import socket
+import subprocess
 
 
 class App:
@@ -204,6 +206,17 @@ class App:
                 self.clear_console(2)
 
 
+    def is_local(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            sock.connect(("127.0.0.1", 1))
+            return True
+        except socket.error:
+            return False
+        finally:
+            sock.close()
+
+
     def get_videos(self):
         if len(self.urls) != 0:
             self.options = [*self.urls, "Back"]
@@ -216,13 +229,25 @@ class App:
                 input("Press Enter to continue...")
                 self.clear_console(5)
 
-                labels = get_labels()
-                data = get_data(*calculate_stat(date_from, date_until, self.menu.chosen_menu_entry.split('/')[-1]))
-                plot(labels, data, tg.normalize(np.log1p(data), 25))
-                
-                input("Press Enter to continue...")
-                self.clear_console(16)
-                self.get_stat()
+                folder_path = "videos"
+                file_list = os.listdir(folder_path)
+
+                self.options = []
+                for file in file_list:
+                    if file.startswith(self.menu.chosen_menu_entry.split('/')[-1]):
+                        file_path = os.path.join(folder_path, file)
+                        if os.path.isfile(file_path):
+                            creation_time = datetime.fromtimestamp(os.path.getctime(file_path))
+                            if date_from <= creation_time <= date_until:
+                                self.options.append(file)
+                if len(self.options) == 0:
+                    "No videos were found for this period."
+                    input("Press Enter to continue...")
+                    self.clear_console(2)
+                    self.main()
+                else:
+                    self.options.append("Back")
+                    self.start_video()
             else:
                 self.main()
         else:
@@ -231,6 +256,20 @@ class App:
             self.clear_console(2)
             self.main()   
 
+
+    def start_video(self):
+        self.update_menu()
+        if self.menu.chosen_menu_entry != "Back":
+            if self.is_local():
+                vlc_command = ['vlc', '--quiet', 'videos/' + self.menu.chosen_menu_entry]
+                with open(os.devnull, 'w') as devnull:
+                    subprocess.run(vlc_command, stdout=devnull, stderr=devnull)
+                    self.start_video()
+            else:
+                pass
+                # TODO: downloading video from remote server
+        else:
+            self.get_videos()
 
     def exit(self):
         self.clear_console(7)
@@ -258,5 +297,4 @@ class App:
 
 if __name__ == "__main__":
     a = App()
-    # a.start()
     a.main()
