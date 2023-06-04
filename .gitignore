@@ -1,4 +1,6 @@
 /__pycache__
+/attention
 /saves
+/videos
 /*.pt
 /*.db

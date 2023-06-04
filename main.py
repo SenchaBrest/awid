@@ -209,9 +209,9 @@ class App:
             self.options = [*self.urls, "Back"]
             self.update_menu()
             if self.menu.chosen_menu_entry != "Back":
-                print("The time from which you want to display statistics:")
+                print("The time from which you want to search video of bad situations:")
                 date_from = self.get_datetime_from_input()
-                print("The time until which you want to display statistics:")
+                print("The time until which you want to search video of bad situations:")
                 date_until = self.get_datetime_from_input()
                 input("Press Enter to continue...")
                 self.clear_console(5)
