@@ -7,7 +7,7 @@
 Склонировать репозиторий проекта с GitHub командой: 
 
 	git clone https://github.com/SenchaBrest/awid.git
-или скачать .zip файл проекта по ссылке '''https://github.com/SenchaBrest/awid/archive/refs/heads/master.zip''', после чего разархивировать его.
+или скачать .zip файл проекта по ссылке https://github.com/SenchaBrest/awid/archive/refs/heads/master.zip, после чего разархивировать его.
 Перейти в склонированный или скачанный проект командой:
 
 	cd awid
