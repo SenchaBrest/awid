@@ -1,4 +1,4 @@
-# awid
+# awid - Attention-Worthy-Intersection-Detection
 
 Инструкция по установке и проверке системы
 
